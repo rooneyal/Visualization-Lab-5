@@ -39,21 +39,19 @@ svg.append('g')
 d3.csv('coffee-house-chains.csv', d3.autoType).then(data=>{ 
     type = document.querySelector("#group-by").value
     console.log(type)
-    let click = 0
-    update(data)
-    data.sort()
+    update(data, type)
     console.log('coffee-house-chains.csv', data)
-    document.querySelector('#sort')
-addEventListener('click', (event) => {
-if (click == false) {
-                click = true;
+    
+document.querySelector('#sorter').addEventListener('click', (event) => {
+    if (sorter == false) {
+        sorter = true;
             } else {
-                click = false;
+                sorter = false;
             }
             update(data, type)
         })
-    document.querySelector("#group-by").addEventListener('change', (event) => {
-        update(data, event.target.value)})
+ document.querySelector("#group-by").addEventListener('change', (event) => {
+       update(data, event.target.value)})
    
     })
 
@@ -72,10 +70,11 @@ svg.append('text')
         }
     });
 
+
 function update(data, type) {
     type = document.querySelector("#group-by").value
 
-    if (sorter == 1 && type == "revenue") {
+    if ( sorter == 1 && type == "revenue") {
         data = data.sort((a,b) => b.revenue-a.revenue)
     }
     else if ( sorter == 1 && type == "stores") {
@@ -131,16 +130,6 @@ svg.append('text')
 
     });
 
-d3.select('.sort')
-.on('clicker', function(d) {
-    if (sorter == 1) {
-        sorter = 0
-    }
-    else {
-        sorter = 1
-    }
-    console.log(sorter)
-})
 
 svg.select('text.axis-text').remove();
 
