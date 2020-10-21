@@ -2,7 +2,9 @@ let type = document.querySelector("#group-by").value
 const margin = {top:50, left:100, bottom:80, right:50};
 const width = 700-margin.left- margin.right;
 const height = 600-margin.top- margin.bottom;
-    
+
+let sorter = 1
+
 const svg = d3.select('.chart')
     .append('svg')
     .attr('width', width + margin.left + margin.right)
@@ -39,6 +41,7 @@ d3.csv('coffee-house-chains.csv', d3.autoType).then(data=>{
     console.log(type)
     let click = 0
     update(data)
+    data.sort()
     console.log('coffee-house-chains.csv', data)
     document.querySelector('#sort')
 addEventListener('click', (event) => {
@@ -51,6 +54,7 @@ if (click == false) {
         })
     document.querySelector("#group-by").addEventListener('change', (event) => {
         update(data, event.target.value)})
+   
     })
 
 svg.append('text')
@@ -70,6 +74,19 @@ svg.append('text')
 
 function update(data, type) {
     type = document.querySelector("#group-by").value
+
+    if (sorter == 1 && type == "revenue") {
+        data = data.sort((a,b) => b.revenue-a.revenue)
+    }
+    else if ( sorter == 1 && type == "stores") {
+        data = data.sort((a,b) => b.stores-a.stores)
+    }
+    else if (sorter = 0 && type == "revenue") {
+        data = data.sort((a,b) => a.revenue-b.revenue)
+    }
+    else {
+        data = data.sort((a,b) => a.stores-b.stores)
+    }
 
     xScale.domain(data.map(d=>d.company))
 
@@ -114,6 +131,17 @@ svg.append('text')
 
     });
 
+d3.select('.sort')
+.on('clicker', function(d) {
+    if (sorter == 1) {
+        sorter = 0
+    }
+    else {
+        sorter = 1
+    }
+    console.log(sorter)
+})
+
 svg.select('text.axis-text').remove();
 
     svg.select('.x-axis')
@@ -121,3 +149,4 @@ svg.select('text.axis-text').remove();
         
     svg.select('.y-axis')
         .call(yAxis)}
+
